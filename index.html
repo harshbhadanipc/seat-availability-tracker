@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smart Library Seat Tracker</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap">
+<style>
+:root{--bg:#e6f4ea;--card:#ffffff;--tx:#10281d;--mut:#4f6b5b;--bd:#c6dfd0;--mar:#7a1f2e;--free:#12935a;--occ:#d03a45;--res:#d6a100;--off:#8993a6;--acc:#2a6f9e;--acc-tx:#fff;--soft:#f0f9f3;--g1:rgba(40,170,110,.25);--g2:rgba(150,220,180,.35);--sh:0 1px 2px rgba(14,27,51,.06),0 8px 24px rgba(14,27,51,.07);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root[data-theme="auto"]{--bg:#0a1020;--card:#131c2e;--tx:#e9eef8;--mut:#98a6bf;--bd:#25324a;--free:#3ad686;--occ:#ff6b74;--res:#ffcf3f;--off:#71809a;--acc:#8aa6ff;--acc-tx:#0a1020;--soft:#18233a;--g1:rgba(80,120,255,.16);--g2:rgba(30,200,160,.10);--sh:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--bg:#0a1020;--card:#131c2e;--tx:#e9eef8;--mut:#98a6bf;--bd:#25324a;--free:#3ad686;--occ:#ff6b74;--res:#ffcf3f;--off:#71809a;--acc:#8aa6ff;--acc-tx:#0a1020;--soft:#18233a;--g1:rgba(80,120,255,.16);--g2:rgba(30,200,160,.10);--sh:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.35)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;color:var(--tx);font:15px/1.55 "Plus Jakarta Sans",system-ui,sans-serif;background:radial-gradient(1100px 520px at 5% -8%,var(--g1),transparent 60%),radial-gradient(900px 520px at 100% 0,var(--g2),transparent 55%),var(--bg);background-attachment:fixed;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;background-image:radial-gradient(var(--bd) 1px,transparent 1px);background-size:26px 26px;-webkit-mask-image:linear-gradient(#000,transparent 70%);mask-image:linear-gradient(#000,transparent 70%)}
+.wrap{position:relative;max-width:1000px;margin:0 auto;padding:18px 16px 40px}
+.hero{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;padding:22px 24px;margin-bottom:18px;border-radius:20px;color:#effaf3;background:radial-gradient(500px 220px at 90% 0,rgba(60,220,180,.35),transparent 60%),radial-gradient(480px 260px at 0 100%,rgba(90,210,150,.40),transparent 60%),linear-gradient(135deg,#073a29,#1b7a52);box-shadow:0 14px 40px rgba(10,80,50,.35);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;border:30px solid rgba(255,255,255,.06)}
+.brand{display:flex;gap:14px;align-items:center;position:relative;z-index:1}
+.logo{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(6px)}
+h1{font:700 22px/1.2 Sora,"Plus Jakarta Sans",system-ui,sans-serif;margin:0;letter-spacing:-.3px}
+h2{font:600 16px/1.3 Sora,"Plus Jakarta Sans",system-ui,sans-serif;margin:0 0 10px}
+.sub{color:var(--mut);font-size:13px}
+.hero .sub{color:#c4ead6}
+.hero .row{position:relative;z-index:1}.hero #who{color:#d9e4ff;font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button{font:inherit;font-weight:500;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:9px 16px;border-radius:10px;transition:transform .15s,box-shadow .15s,background .15s}
+button:hover{box-shadow:0 4px 14px rgba(14,27,51,.12)}
+button:active{transform:translateY(1px)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+button.pri{background:linear-gradient(135deg,#0f7a4a,#1fa46c);color:#fff;border-color:transparent;font-weight:600}
+.hero button{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.28)}
+.hero button.pri{background:#fff;color:#073a29;border-color:#fff}
+button.dng{color:var(--occ);border-color:var(--occ);background:transparent}
+button.sm{padding:5px 10px;font-size:13px}
+button:disabled{opacity:.45;cursor:not-allowed}
+input,select{font:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);width:100%}
+nav{display:inline-flex;gap:4px;padding:5px;background:var(--card);border:1px solid var(--bd);border-radius:14px;margin-bottom:16px;box-shadow:var(--sh);max-width:100%;overflow-x:auto}
+nav button{border:0;background:none;padding:8px 18px;border-radius:10px;color:var(--mut);white-space:nowrap;box-shadow:none}
+nav button[aria-selected=true]{background:linear-gradient(135deg,#0f7a4a,#1fa46c);color:#fff;font-weight:600}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:20px;box-shadow:var(--sh);margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--bd);border-left-width:6px;border-radius:14px;padding:12px 14px;box-shadow:var(--sh);color:var(--mut);font-size:13px;font-weight:500}
+.stat b{font:700 30px/1.1 Sora,system-ui,sans-serif;display:block;color:var(--tx)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--mut)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:4px;margin-right:6px;vertical-align:-1px}
+.floor{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin:16px 0}
+.tbl{background:linear-gradient(180deg,var(--soft),transparent);border:1px dashed var(--bd);border-radius:18px;padding:16px}
+.tbl .name{text-align:center;margin-top:12px;padding:10px;border-radius:12px;color:var(--tx);font-weight:600;font-size:13px;letter-spacing:.4px;background:var(--bg);box-shadow:none;border:1px solid var(--bd)}
+.seats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.seat{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:26px 4px 12px;border-radius:14px 14px 20px 20px;border:2px solid;font-weight:700;background:var(--card);box-shadow:0 4px 0 var(--mar)}
+.seat::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:38%;height:9px;border-radius:6px 6px 2px 2px;background:var(--mar)}
+.seat span{color:var(--mar);font-size:16px}
+.seat small{font-weight:500;font-size:11.5px;text-align:center;line-height:1.25;color:var(--mut)}
+.seat.free{border-color:var(--free)}
+.seat.occupied{border-color:var(--occ);cursor:default}
+.seat.reserved{border-color:var(--res);cursor:default}
+.seat.offline{border-color:var(--off);border-style:dashed;cursor:default;opacity:.6;box-shadow:none}
+.seat.locked{border-color:var(--acc);border-style:dashed;cursor:not-allowed}
+.seat.mine{outline:3px solid var(--acc);outline-offset:3px}
+.seat.free:hover{transform:translateY(-3px);background:linear-gradient(180deg,var(--card) 40%,#ecc9d0);box-shadow:0 8px 0 var(--mar),0 16px 26px rgba(122,31,46,.35)}
+.seat.free:hover small{color:var(--mar)}
+.entrance{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 18px;border-radius:14px;background:linear-gradient(135deg,#0b1626,#14284a);color:#d6e4ff}
+.oled{font-family:ui-monospace,Consolas,monospace;background:#02070e;color:#7fe3ff;padding:7px 14px;border-radius:8px;border:1px solid #1f3552;text-shadow:0 0 8px rgba(127,227,255,.6)}
+.timer{font:700 48px/1.1 Sora,system-ui,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-1px;background:linear-gradient(135deg,#0f7a4a,#2a9d8f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--bd)}
+.tw{overflow-x:auto}td{white-space:nowrap}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12.5px;font-weight:600;border:1.5px solid}
+.pill.free{color:var(--free)}.pill.occupied{color:var(--occ)}.pill.reserved{color:var(--res)}.pill.locked{color:var(--acc);border-style:dashed}.pill.offline{color:var(--off);border-style:dashed}
+pre{background:#0b1626;color:#bfe3ff;padding:14px;border-radius:12px;overflow-x:auto;font-size:12.5px;margin:0}
+.log{max-height:260px;overflow:auto;font-size:13px;margin:0;padding:0;list-style:none}
+.log li{padding:6px 0;border-bottom:1px solid var(--bd)}
+.hb{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--free);margin-right:6px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:#0e1b33;color:#fff;padding:12px 18px;border-radius:12px;z-index:30;max-width:90%;box-shadow:0 10px 30px rgba(0,0,0,.4);border-left:5px solid var(--free)}
+.toast.err{background:#3b0f14;border-left-color:var(--occ)}
+.modal{position:fixed;inset:0;background:rgba(6,12,28,.6);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal .card{width:100%;max-width:420px;margin:0;padding:24px}
+label{display:block;font-size:13px;font-weight:500;color:var(--mut);margin:12px 0 5px}
+.banner{padding:11px 16px;border-radius:12px;background:var(--soft);border:1px solid var(--bd);margin-bottom:14px;font-size:13px;color:var(--mut)}
+.foot{margin-top:26px;text-align:center;font-size:12.5px;color:var(--mut)}
+@media(max-width:520px){.timer{font-size:38px}.hero{padding:18px}h1{font-size:19px}}
+@media(prefers-reduced-motion:no-preference){.seat{transition:transform .18s,box-shadow .18s}.modal .card{animation:pop .22s ease}@keyframes pop{from{opacity:0;transform:scale(.96) translateY(8px)}}}
+</style></head><body>
+<div class="wrap">
+<header class="hero"><div class="brand"><div class="logo" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M9 8h7M9 12h5"/></svg></div><div><h1>Smart Library Seat Tracker</h1><div class="sub" id="subt"></div></div></div>
+<div class="row"><span class="sub" id="who"></span><button id="studentbtn" class="pri" hidden>Student login</button><button id="staffbtn" hidden></button><button id="logout" hidden>Log out</button></div></header>
+<div id="main"></div><div class="foot">MDP Review 2 · Seat Availability and Allocation Tracker · VIT Chennai</div></div>
+<div id="modal"></div><div id="toast"></div>
+<script>
+const N=6,GPIO=[32,33,34,35,36,39],PASS='admin123';
+let localMode=false,db=null,SID=Math.random().toString(36).slice(2,8),me=null,staff=false,tab='seats',seatsData={},logs=[],cfg={lockSec:120,holdMin:15,emptyMin:20},mt=null;
+try{me=JSON.parse(localStorage.getItem('slst_me')||'null')}catch(e){}
+const now=()=>Date.now(),$=id=>document.getElementById(id);
+const fmt=s=>{s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+const hhmm=t=>new Date(t).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+const freeDoc=cur=>({status:'free',by:null,name:null,until:0,pressure:false,emptySince:0,offline:!!(cur&&cur.offline)});
+function eff(d){const t=now();let st=(d&&d.status)||'free';
+ if((st==='locked'||st==='reserved')&&t>d.until)st='free';
+ if(st==='occupied'&&d.emptySince&&t-d.emptySince>cfg.emptyMin*60000)st='free';
+ return st}
+const sd=i=>seatsData['s'+i],zone=i=>i<4?'Table A':'Table B';
+function toast(m,err){$('toast').innerHTML='<div class="toast'+(err?' err':'')+'" role="status">'+m+'</div>';clearTimeout(toast.h);toast.h=setTimeout(()=>$('toast').innerHTML='',3500)}
+function localDb(){
+ const KEY='slst_db',LK='slst_lease';let mem={};
+ const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return mem}};
+ const save=o=>{mem=o;try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}};
+ const subs=new Set(),fire=()=>subs.forEach(f=>f());
+ addEventListener('storage',e=>{if(e.key===KEY)fire()});
+ const snap=(id,data)=>({id,exists:data!==undefined,data:()=>data,metadata:{}});
+ const docRef=p=>({id:p.split('/').pop(),path:p,
+  get:async()=>snap(p.split('/').pop(),load()[p]),
+  set:async d=>{const o=load();o[p]=JSON.parse(JSON.stringify(d));save(o);fire()},
+  delete:async()=>{const o=load();delete o[p];save(o);fire()},
+  acquire:async({holder,ttlMs})=>{let L={};try{L=JSON.parse(localStorage.getItem(LK)||'{}')}catch(e){}const l=L[p];if(l&&l.exp>Date.now()&&l.h!==holder)return{acquired:false};L[p]={h:holder,exp:Date.now()+Math.max(1000,ttlMs||30000)};try{localStorage.setItem(LK,JSON.stringify(L))}catch(e){}return{acquired:true}},
+  onSnapshot:next=>{const f=()=>next(snap(p.split('/').pop(),load()[p]));subs.add(f);setTimeout(f,0);return()=>subs.delete(f)}});
+ const colRef=(p,ord,lim)=>{const list=()=>{const o=load();let r=Object.keys(o).filter(k=>k.startsWith(p+'/')&&k.indexOf('/',p.length+1)<0).map(k=>snap(k.slice(p.length+1),o[k]));
+  if(ord)r.sort((a,b)=>{const x=a.data()[ord.f],y=b.data()[ord.f];return(x>y?1:x<y?-1:0)*(ord.d==='desc'?-1:1)});
+  if(lim)r=r.slice(0,lim);return{docs:r,size:r.length,empty:!r.length}};
+  return{get:async()=>list(),orderBy:(f,d)=>colRef(p,{f,d},lim),limit:n=>colRef(p,ord,n),onSnapshot:next=>{const f=()=>next(list());subs.add(f);setTimeout(f,0);return()=>subs.delete(f)}}};
+ return{doc:docRef,collection:p=>colRef(p)};
+}
+async function addLog(m){try{await db.doc('log/'+now()+'-'+Math.random().toString(36).slice(2,5)).set({t:now(),m})}catch(e){}}
+// first-come-first-served claim: lease on the seat doc, re-read, write only if still available
+async function txn(id,fn){
+ if(!db){toast('Live sync is not available in this view.',true);return 'err'}
+ try{const ref=db.doc('seats/s'+id);
+  const r=await ref.acquire({holder:SID,ttlMs:2000});
+  if(!r.acquired)return 'busy';
+  const snap=await ref.get(),cur=snap.exists?snap.data():null;
+  const out=fn(cur,eff(cur));if(typeof out==='string')return out;
+  await ref.set(out);return 'ok'}
+ catch(e){toast('Could not save. Your account may be view-only, or you are offline.',true);return 'err'}
+}
+function myBooking(){if(!me)return null;for(let i=1;i<=N;i++){const d=sd(i);if(d&&d.by===me.id){const st=eff(d);if(st==='locked'||st==='reserved'||st==='occupied')return{id:i,d,st}}}return null}
+function counts(){const c={free:0,booking:0,occupied:0,offline:0};for(let i=1;i<=N;i++){const d=sd(i),st=eff(d);if(d&&d.offline)c.offline++;else if(st==='free')c.free++;else if(st==='occupied')c.occupied++;else c.booking++}return c}
+
+async function select(id){
+ if(!me){loginModal();return}
+ const b=myBooking();if(b){toast('You already have an active booking (S'+b.id+').',true);return}
+ const res=await txn(id,(cur,st)=>{if(st!=='free'||(cur&&cur.offline))return 'taken';return{status:'locked',by:me.id,name:me.name,until:now()+cfg.lockSec*1000,pressure:false,emptySince:0,offline:false}});
+ if(res==='ok'){addLog('S'+id+' held by '+me.id);confirmModal(id)}
+ else if(res!=='err')toast('Seat S'+id+' was just taken by another student. Pick another seat.',true)
+}
+function closeModal(){clearInterval(mt);$('modal').innerHTML=''}
+function confirmModal(id){
+ $('modal').innerHTML='<div class="modal"><div class="card" role="dialog" aria-label="Confirm booking"><h2>Seat S'+id+' is held for you</h2><p>'+zone(id)+'. Confirm within <b id="cd"></b> or the seat goes back to everyone. After confirming, check in with your ID card within '+cfg.holdMin+' minutes.</p><div class="row"><button class="pri" id="cy">Confirm seat</button><button id="cn">Release seat</button></div></div></div>';
+ const upd=()=>{const d=sd(id);if(!d||d.by!==me.id||eff(d)!=='locked'){closeModal();return}$('cd').textContent=fmt((d.until-now())/1000)};
+ clearInterval(mt);mt=setInterval(()=>{const d=sd(id);if(d&&d.by===me.id&&eff(d)==='locked')upd();else{closeModal();if(!(d&&d.by===me.id&&eff(d)==='reserved'))toast('Your hold on S'+id+' expired.',true)}},1000);
+ $('cd').textContent=fmt(cfg.lockSec);
+ $('cn').onclick=async()=>{closeModal();await txn(id,(cur)=>cur&&cur.by===me.id?freeDoc(cur):'lost');addLog('S'+id+' released by '+me.id)};
+ $('cy').onclick=async()=>{const r=await txn(id,(cur,st)=>(!cur||cur.by!==me.id||st!=='locked')?'lost':{...cur,status:'reserved',until:now()+cfg.holdMin*60000,ext:false});
+  closeModal();if(r==='ok'){addLog('S'+id+' booked by '+me.id);toast('Seat S'+id+' booked. Arrive within '+cfg.holdMin+' minutes.');tab='mine';render()}else if(r!=='err')toast('Your hold expired. Pick the seat again.',true)};
+}
+async function myAct(act){
+ const b=myBooking();if(!b)return;const id=b.id;let r;
+ if(act==='checkin'){r=await txn(id,(cur,st)=>cur&&cur.by===me.id&&st==='reserved'?{...cur,tapped:true}:'lost');if(r==='ok'){addLog('POST /checkin RFID tap, S'+id+' by '+me.id+' (waiting for weight sensor)');toast('Card tapped. Sit down so the seat sensor can confirm you.')}}
+ if(act==='sit'){r=await txn(id,(cur,st)=>cur&&cur.by===me.id&&st==='reserved'&&cur.tapped?{...cur,status:'occupied',pressure:true,emptySince:0,until:0}:'lost');if(r==='ok'){addLog('Weight above 15 kg on S'+id+', booking confirmed');toast('Seat confirmed. Enjoy your study session.')}else if(r==='lost')toast('Tap your ID card first.',true)}
+ if(act==='extend'){r=await txn(id,(cur,st)=>cur&&cur.by===me.id&&st==='reserved'&&!cur.ext?{...cur,until:cur.until+300000,ext:true}:'lost');if(r==='ok')toast('Extended by 5 minutes.')}
+ if(act==='cancel'||act==='end'){r=await txn(id,(cur)=>cur&&cur.by===me.id?freeDoc(cur):'lost');if(r==='ok'){addLog('S'+id+(act==='end'?' session ended':' cancelled')+' by '+me.id);toast('Seat freed.')}}
+ render()
+}
+function seatBtn(i){
+ const d=sd(i),st=eff(d),off=d&&d.offline,mine=d&&me&&d.by===me.id&&st!=='free';
+ let cls=off?'offline':st,note;
+ if(off)note='sensor offline';
+ else if(st==='free')note='free · tap to book';
+ else if(st==='locked')note=mine?'held for you':'being booked by another student';
+ else if(st==='reserved')note=(mine?'yours · ':'reserved · ')+fmt((d.until-now())/1000);
+ else note=mine?'yours · occupied':(d.pressure?'occupied':'empty · frees in '+fmt(cfg.emptyMin*60-(now()-d.emptySince)/1000));
+ return '<button class="seat '+cls+(mine?' mine':'')+'" data-seat="'+i+'" aria-label="Seat '+i+', '+note+'"><span>S'+i+'</span><small>'+note+'</small></button>'
+}
+function statsHtml(){const c=counts();return '<div class="stats">'+[['Free',c.free,'free'],['Booking or reserved',c.booking,'res'],['Occupied',c.occupied,'occ'],['Sensor offline',c.offline,'off']].map(x=>'<div class="stat" style="border-left-color:var(--'+x[2]+')"><b>'+x[1]+'</b>'+x[0]+'</div>').join('')+'</div>'}
+function vSeats(){
+ const c=counts(),L=(k,t)=>'<span><i class="dot" style="background:var(--'+k+')"></i>'+t+'</span>';
+ return statsHtml()+'<div class="card"><div class="row" style="justify-content:space-between"><h2>Reading room · ground floor</h2><div class="legend">'+L('free','Free')+L('res','Reserved')+L('occ','Occupied')+L('acc','Being booked')+L('off','Offline')+'</div></div>'+
+ '<div class="floor">'+['Table A','Table B'].map(z=>'<div class="tbl"><div class="seats">'+[1,2,3,4,5,6].filter(i=>zone(i)===z).map(seatBtn).join('')+'</div><div class="name">'+z+'</div></div>').join('')+'</div>'+
+ '<div class="entrance"><span>Entrance display</span><span class="oled">FREE SEATS: '+c.free+' / '+N+'</span></div></div>'+
+ '<p class="sub">First student to select a seat gets it. Everyone sees the change live.</p>'
+}
+function vMine(){
+ const b=myBooking();
+ if(!b)return '<div class="card"><h2>My booking</h2><p>You have no active booking. Pick a free seat on the seat map.</p><button class="pri" data-go="seats">Go to seat map</button></div>';
+ const id=b.id,d=b.d;
+ if(b.st==='locked')return '<div class="card"><h2>My booking</h2><p>Seat <b>S'+id+'</b> is held for you. Confirm it from the seat map popup within '+fmt((d.until-now())/1000)+'.</p><button class="pri" data-confirm="'+id+'">Open confirmation</button></div>';
+ if(b.st==='occupied')return '<div class="card"><h2>My booking</h2><p>Seat <b>S'+id+'</b> ('+zone(id)+') · checked in with your ID card.</p><p class="sub">Leaving the seat empty for '+cfg.emptyMin+' minutes releases it automatically.</p><button class="dng" data-act="end">End session and free seat</button></div>';
+ return '<div class="card"><h2>My booking</h2><p>Seat <b>S'+id+'</b> ('+zone(id)+'). '+(d.tapped?'Card tapped. Waiting for the seat sensor to detect you within:':'Arrive within:')+'</p><div class="timer">'+fmt((d.until-now())/1000)+'</div><div class="row" style="margin-top:12px">'+(d.tapped?'<button class="pri" data-act="sit">Simulate sitting (demo)</button>':'<button class="pri" data-act="checkin">Tap ID card to check in</button>')+'<button data-act="extend"'+(d.ext?' disabled':'')+'>Extend by 5 min</button><button class="dng" data-act="cancel">Cancel booking</button></div><p class="sub">A booking is confirmed only when your ID card tap and the seat sensor (over 15 kg) both agree. Otherwise it is released when the time runs out.</p></div>'
+}
+function timerTxt(d,st){if(st==='locked'||st==='reserved')return fmt((d.until-now())/1000)+(st==='locked'?' to confirm':' to check in');if(st==='occupied'&&d.emptySince)return fmt(cfg.emptyMin*60-(now()-d.emptySince)/1000)+' to release';return '-'}
+function vStaffLive(){
+ return statsHtml()+'<div class="card"><h2>All seats and sensors</h2><div class="tw"><table><tr><th>Seat</th><th>Status</th><th>Held by</th><th>Timer</th><th>Pin</th><th>FSR</th><th>Sensor link</th><th></th></tr>'+
+ [1,2,3,4,5,6].map(i=>{const d=sd(i)||freeDoc(),st=eff(d),k=d.offline?'offline':st;
+  return '<tr><td>S'+i+'</td><td><span class="pill '+k+'">'+k+'</span></td><td>'+(st==='free'?'-':(d.by||'Walk-in (sensor)'))+'</td><td>'+timerTxt(d,st)+'</td><td>GPIO '+GPIO[i-1]+'</td><td><button class="sm" data-press="'+i+'">'+(st!=='free'&&d.pressure?'Pressed':'Released')+'</button></td><td><button class="sm" data-off="'+i+'">'+(d.offline?'Bring online':'Take offline')+'</button></td><td><button class="sm dng" data-free="'+i+'">Free up</button></td></tr>'}).join('')+'</table></div><p class="sub">FSR buttons stand in for the pressure pads under each seat (ADC1 pins).</p></div>'
+}
+function vStaffRules(){
+ const lastS=logs.find(l=>l.m.indexOf('/sensor-update')>-1);
+ return '<div class="grid2"><div class="card"><h2>Booking rules</h2><label for="r1">Seconds to confirm a held seat</label><input id="r1" type="number" min="10" max="600" value="'+cfg.lockSec+'"><label for="r2">Minutes to check in after booking</label><input id="r2" type="number" min="1" max="60" value="'+cfg.holdMin+'"><label for="r3">Minutes a seat can sit empty before release</label><input id="r3" type="number" min="1" max="120" value="'+cfg.emptyMin+'"><div class="row" style="margin-top:12px"><button class="pri" data-save="1">Save rules</button></div><p class="sub">For a quick demo, set the check-in time to 1 minute.</p></div>'+
+ '<div><div class="card"><h2>Last ESP32 message</h2><pre>'+(lastS?lastS.m.replace('POST /sensor-update ',''):'waiting for a sensor change…')+'</pre></div><div class="card"><h2>Reset</h2><p class="sub">Set every seat to free and clear the activity log.</p><button class="dng" data-reset="1">Reset everything to zero</button></div></div></div>'+
+ '<div class="card"><h2>Activity log</h2><ul class="log">'+(logs.length?logs.map(l=>'<li>'+hhmm(l.t)+'  '+l.m.replace(/</g,'&lt;')+'</li>').join(''):'<li>No activity yet.</li>')+'</ul></div>'
+}
+function render(){
+ const a=document.activeElement;if(a&&(a.tagName==='INPUT'||a.tagName==='SELECT')&&staff)return;
+ $('subt').textContent=staff?'Library staff console':'Student portal · live seat availability and booking';
+ $('who').textContent=staff?'Staff':(me?me.name+' · '+me.id:'');
+ $('logout').hidden=!me||staff;$('staffbtn').hidden=!!me&&!staff;$('studentbtn').hidden=!!me||staff;$('staffbtn').textContent=staff?'Exit staff console':'Staff sign in';
+ let h='';
+ if(localMode)h+='<div class="banner">Demo mode: seats are saved in this browser. Open this page in two tabs or windows to try two students booking at once.</div>';
+ if(staff){h+='<nav role="tablist">'+[['live','Live monitor'],['rules','Rules and activity']].map(t=>'<button role="tab" data-tab="'+t[0]+'" aria-selected="'+((tab===t[0])||(tab==='seats'&&t[0]==='live'))+'">'+t[1]+'</button>').join('')+'</nav>'+(tab==='rules'?vStaffRules():vStaffLive())}
+ else{h+='<nav role="tablist">'+[['seats','Seat map'],['mine','My booking']].map(t=>'<button role="tab" data-tab="'+t[0]+'" aria-selected="'+(tab===t[0])+'">'+t[1]+'</button>').join('')+'</nav>'+(tab==='mine'?vMine():vSeats())}
+ $('main').innerHTML=h
+}
+function loginModal(){
+ $('modal').innerHTML='<div class="modal"><div class="card" role="dialog" aria-label="Student login"><h2>Student login</h2><p class="sub">Use your name and registration number.</p><label for="ln">Name</label><input id="ln" autocomplete="off"><label for="lid">Registration number</label><input id="lid" autocomplete="off"><div class="row" style="margin-top:14px"><button class="pri" id="lgo">Log in</button><button id="lx">Close</button><button id="ls">Staff sign in</button></div></div></div>';
+ $('lx').onclick=closeModal;$('ls').onclick=staffModal;$('ln').focus();
+ $('lgo').onclick=()=>{const n=$('ln').value.trim(),i=$('lid').value.trim().toUpperCase();if(!n||!i){toast('Enter your name and registration number.',true);return}me={name:n,id:i};try{localStorage.setItem('slst_me',JSON.stringify(me))}catch(e){}closeModal();render()}
+}
+function staffModal(){
+ $('modal').innerHTML='<div class="modal"><div class="card" role="dialog" aria-label="Staff sign in"><h2>Staff sign in</h2><p class="sub">Library staff only. Demo passcode: '+PASS+'</p><label for="pw">Passcode</label><input id="pw" type="password" autocomplete="off"><div class="row" style="margin-top:14px"><button class="pri" id="pgo">Sign in</button><button id="px">Close</button></div></div></div>';
+ $('px').onclick=closeModal;$('pw').focus();
+ const go=()=>{if($('pw').value===PASS){staff=true;tab='live';closeModal();render()}else toast('Wrong passcode.',true)};
+ $('pgo').onclick=go;$('pw').onkeydown=e=>{if(e.key==='Enter')go()}
+}
+function resetModal(){
+ $('modal').innerHTML='<div class="modal"><div class="card" role="dialog"><h2>Reset everything?</h2><p>Every seat becomes free and the activity log is cleared. Students lose their bookings.</p><div class="row"><button class="dng" id="ry">Reset to zero</button><button id="rn">Cancel</button></div></div></div>';
+ $('rn').onclick=closeModal;
+ $('ry').onclick=async()=>{closeModal();try{for(let i=1;i<=N;i++)await db.doc('seats/s'+i).set(freeDoc(null));const q=await db.collection('log').get();for(const d of q.docs)await db.doc('log/'+d.id).delete();toast('Everything reset to zero.')}catch(e){toast('Reset failed.',true)}}
+}
+document.addEventListener('click',async e=>{
+ const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.tab){tab=d.tab;render();return}
+ if(d.go){tab=d.go;render();return}
+ if(d.seat){select(+d.seat);return}
+ if(d.confirm){confirmModal(+d.confirm);return}
+ if(d.act){myAct(d.act);return}
+ if(d.reset){resetModal();return}
+ if(d.save){const v=[+$('r1').value,+$('r2').value,+$('r3').value];if(v.some(x=>!(x>0))){toast('Enter values greater than 0.',true);return}document.activeElement.blur();try{await db.doc('config/rules').set({lockSec:v[0],holdMin:v[1],emptyMin:v[2]});addLog('Rules saved: confirm '+v[0]+'s, check-in '+v[1]+' min, empty '+v[2]+' min');toast('Rules saved.')}catch(x){toast('Could not save rules.',true)}return}
+ if(d.free){const i=+d.free;const r=await txn(i,cur=>freeDoc(cur));if(r==='ok'){addLog('Staff freed S'+i);toast('Seat S'+i+' freed.')}return}
+ if(d.off){const i=+d.off;const r=await txn(i,cur=>({...(cur||freeDoc(null)),offline:!(cur&&cur.offline)}));if(r==='ok')addLog('S'+i+' sensor link toggled');return}
+ if(d.press){const i=+d.press;
+  const r=await txn(i,(cur,st)=>{cur=cur||freeDoc(null);if(cur.offline)return 'offline';
+   if(st==='free')return{status:'occupied',by:null,name:'Walk-in',until:0,pressure:true,emptySince:0,offline:false};
+   if(st==='occupied'){const p=!cur.pressure;return{...cur,pressure:p,emptySince:p?0:now()}}
+   if(st==='reserved'&&cur.tapped)return{...cur,status:'occupied',pressure:true,emptySince:0,until:0};
+   return 'ignored'});
+  if(r==='ok'){const dd=sd(i);addLog('POST /sensor-update '+JSON.stringify({seat_id:i,status:'occupied'}))}
+  else if(r==='ignored')addLog('Pressure on reserved S'+i+' ignored until RFID check-in (bag or books?)');
+  else if(r==='offline')toast('Sensor offline.',true);return}
+});
+$('studentbtn').onclick=loginModal;$('staffbtn').onclick=()=>{if(staff){staff=false;tab='seats';render()}else staffModal()};
+$('logout').onclick=()=>{me=null;try{localStorage.removeItem('slst_me')}catch(e){}tab='seats';render();loginModal()};
+(async()=>{
+ try{db=await claude.use('db')}catch(e){db=null}
+ if(!db){db=localDb();localMode=true}
+ render();
+ db.collection('seats').onSnapshot(s=>{seatsData={};s.docs.forEach(x=>{seatsData[x.id]=x.data()});render()},()=>{});
+ db.doc('config/rules').onSnapshot(s=>{if(s.exists)cfg={...cfg,...s.data()};render()},()=>{});
+ db.collection('log').orderBy('t','desc').limit(40).onSnapshot(s=>{logs=s.docs.map(x=>x.data());if(staff&&tab==='rules')render()},()=>{});
+})();
+if(!me)setTimeout(loginModal,0);
+setInterval(render,1000);
+</script></body></html>
